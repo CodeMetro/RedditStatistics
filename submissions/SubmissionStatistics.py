@@ -83,29 +83,58 @@ def merge_csv(csvcollection):
         file_counter += 1
 
 
-def draw_hist():
-    df=pd.read_csv('/home/shahbaz/submissiontest.csv', sep=',', header=None)
-    df.drop(df.columns[0], axis=1, inplace=True)
-    df1= df.ix[1:]
-    print (df1.head(n=100))
-    print (df1.loc[df1[5].idxmax()])
-    #df1=df[['wordcount']]
-    #hist= sns.distplot(df1, bins=(range(0, 1000, 25)), color='#d50000', kde=False)
-    #hist.set_ylabel('Number of Submissions')
-    #hist.set_xlabel('Length of Submissions')
-    #plot.show()
+def draw_hist(df):
+    df1=df['wordcount']
+    hist= sns.distplot(df, bins=(range(0, 2000, 25)), color='#BF360C', kde=False)
+    hist.set_ylabel('Number of Submissions')
+    hist.set_xlabel('Length of Submissions')
+    plot.show()
 
 
 
-def read_tojson(jsonfile):
-    data=[]
+
+
+
+def json_todataframe(jsonfile):
     with io.open(jsonfile,'rU', encoding='utf-8') as current_file:
         for line in current_file:
-            data.append(json.loads(line))
-    return data
+            yield json.loads(line)
+            #df=df.append(json.loads(line),ignore_index=True)
+    #draw_hist(df)
+            #data.append(json.loads(line))
 
-data= read_tojson('/home/shahbaz/test.jsonl')
-print (data['comment'])
+frame=pd.DataFrame(json_todataframe('/home/bd-ss16-g2/submissions.jsonl'))
+print(frame.head(n=10))
+
+
+
+#print(count_linesinfile('/home/shahbaz/submissions.jsonl'))
+#print(count_linesinfile('/home/shahbaz/workspace/JsontoCSV/submissionswordcount.csv'))
+#print(count_linesinfile('/home/shahbaz/comments.jsonl'))
+#print(count_linesinfile('/home/shahbaz/workspace/JsontoCSV/commentswordcount.csv'))
+
+
+def dataframe_fromcsv(csvpath):
+    df=pd.read_csv(csvpath,header=None)
+    return df
+
+
+#subcsv='/home/shahbaz/workspace/JsontoCSV/submissionswordcount.csv'
+#commcsv='/home/shahbaz/workspace/JsontoCSV/commentswordcount.csv'
+
+#frame=dataframe_fromcsv(subcsv)
+#draw_hist(frame)
+
+#df= pd.DataFrame(data)
+
+#draw_hist(df)
+
+#print ("Longest comment is ", df.loc[df['wordcount'].idxmax()])
+#print ("Shortest comment is ", df.loc[df['wordcount'].idxmin()])
+
+
+
+
 
 
 
